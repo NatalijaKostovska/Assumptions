@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import FileUploadPage from './components/FileUploadPage';
 import Header from './components/Header';

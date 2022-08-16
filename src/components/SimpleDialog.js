@@ -8,11 +8,11 @@ function SimpleDialog({ onClose, selectedValue, open, item, handleChangeAssumpti
 
     const [setence, setSentence] = useState(item);
     const [wordsIndex, setWordsIndex] = useState([]);
-
+    /* eslint-disable */
     const regex = new RegExp('\[$].*[$]\$', 'g');
 
     useEffect(() => {
-        handleFindWord()
+        handleFindWord();
     }, [item]);
 
     const [inputWords, setInputWords] = useState([]);
@@ -33,9 +33,9 @@ function SimpleDialog({ onClose, selectedValue, open, item, handleChangeAssumpti
         setSentence('')
     };
 
-    const handleListItemClick = (value) => {
-        onClose(value);
-    };
+    // const handleListItemClick = (value) => {
+    //     onClose(value);
+    // };
 
     const handleReplaceWord = () => {
         const assumptionStringToArray = item?.split(' ');
