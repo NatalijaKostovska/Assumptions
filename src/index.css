@@ -5,9 +5,75 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.content,
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+.content {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  background: #F0F0F0;
+  border: 1px solid #D8D8D8;
+  padding: 0 15px;
+}
+
+.assumption {
+  display: block;
+  padding: 20px 5px;
+}
+
+.topic {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: red;
+}
+
+.clipboard-button {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.header {
+  padding: 10px;
+  text-align: center;
+  background: #f6f6e5;
+  color: rgba(9, 11, 29, .8);
+  font-size: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.iw-logo {
+  width: 70px;
+  height: 24px;
+}
+
+.upload-button {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 15px;
 }
