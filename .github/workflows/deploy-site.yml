@@ -14,22 +14,23 @@ jobs:
 
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2
         with:
           workflow: main.yml
           workflow_conclusion: success
+          name: production-files
 
       - name: Azure login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.azure_credentials }}
-
+      
       - name: Upload to Azure blob storage
         uses: azure/CLI@v1
         with:
           azcliversion: 2.0.72
           inlineScript: |
-            az storage blob upload-batch --account-name iwcassumptions -d '$web' -s ./production-files
+            az storage blob upload-batch --account-name iwcassumptions -d '$web' -s ./ --subscription 7cd631d3-f833-4b14-b77f-8171b74545a6
 
       - name: Azure logout
         run: |
