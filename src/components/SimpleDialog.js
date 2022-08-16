@@ -29,7 +29,7 @@ function SimpleDialog({ onClose, selectedValue, open, item, handleChangeAssumpti
     }
 
     const handleClose = () => {
-        onClose(selectedValue);
+        onClose();
         setSentence('')
     };
 

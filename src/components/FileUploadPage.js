@@ -1,5 +1,5 @@
-import { Button } from '@mui/material';
-import React, { useState } from 'react';
+import { Button, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import SimpleDialog from './SimpleDialog';
 
 function FileUploadPage() {
@@ -12,12 +12,26 @@ function FileUploadPage() {
     const [clickedItemIndex, setClickedItemIndex] = React.useState();
     const [clickedItemMainIndex, setClickedItemMainIndex] = React.useState();
     const [itemFound, setItemFound] = useState([]);
+    const [checkbox, setCheckBox] = useState([]);
 
-    const handleClickOpen = (item, mainItemIndex, itemIndex) => {
+    const toggleCheckBox = (objectIndex, arrayIndex) => {
+        let tmp = [...checkbox];
+        if (tmp[objectIndex]?.includes(arrayIndex)) {
+            tmp[objectIndex] = tmp[objectIndex].filter(index => index != arrayIndex)
+        }
+        else {
+            tmp[objectIndex].push(arrayIndex);
+        }
+        setCheckBox(tmp);
+    }
+
+    const handleClickOpen = (e, item, mainItemIndex, itemIndex) => {
+        e.stopPropagation();
         setOpen(true);
         setClickedItem(item)
         setClickedItemIndex(itemIndex)
         setClickedItemMainIndex(mainItemIndex);
+        toggleCheckBox(mainItemIndex, itemIndex);
     }
 
     // read JSON file
@@ -32,6 +46,15 @@ function FileUploadPage() {
         }
         reader?.readAsText(e.target.files[0]);
     };
+
+    useEffect(() => {
+        const checkboxArray = [];
+
+        Object.keys(selectedFile).map((item) => {
+            checkboxArray.push([]);
+        })
+        setCheckBox(checkboxArray)
+    }, [selectedFile])
 
     // function for modal to close
     const handleClose = () => {
@@ -73,10 +96,17 @@ function FileUploadPage() {
     }
 
     const handleCopyToClipboard = () => {
-        const novo = selectedFile.reduce(function (previousValue, currentValue) {
-            let newCurrentValue = currentValue?.title;
-            currentValue.assumption.forEach(assumption => newCurrentValue = newCurrentValue + '\n' + assumption.replace(/[$]/gi, ""))
-            return previousValue + '\n' + newCurrentValue
+        const novo = selectedFile.reduce(function (previousValue, currentValue, currentIndex) {
+            if (checkbox[currentIndex].length > 0) {
+                let newCurrentValue = currentValue?.title;
+
+                currentValue.assumption.forEach((assumption, index) =>
+                    checkbox[currentIndex].length !== 0 && checkbox[currentIndex]?.includes(index) && (newCurrentValue = newCurrentValue + '\n' + assumption.replace(/[$]/gi, ""))
+                )
+                return previousValue + '\n' + newCurrentValue
+            } else {
+                return previousValue;
+            }
         }, '')
         navigator.clipboard.writeText((novo));
     }
@@ -96,19 +126,22 @@ function FileUploadPage() {
                     selectedFile?.map((topic, mainIndex) =>
                         <div key={mainIndex} className="assumption">
                             <div className='topic'>{topic.title}</div>
-
-                            {topic.assumption.map((item, index) =>
-                                <li key={index} onClick={() => handleClickOpen(item, mainIndex, index)}>
-                                    {
-                                        item.replace(/[$]/gi, "")
-                                    }
-                                </li>
-                            )}
+                            <FormGroup>
+                                {topic.assumption.map((item, index) =>
+                                    <FormControlLabel
+                                        // onChange={() => handleClickOpen(item, mainIndex, index)}
+                                        // checked={setCheck(index)}
+                                        key={index}
+                                        label={item.replace(/[$]/gi, "")}
+                                        control={<Checkbox onClick={(e) => handleClickOpen(e, item, mainIndex, index)} />}
+                                    // name={index}
+                                    />
+                                )}
+                            </FormGroup>
                         </div>
                     )
-                    : itemFound.map(item =>
-
-                        <div className="assumption">
+                    : itemFound.map((item, index) =>
+                        <div className="assumption" key={index}>
                             <div className='topic'>{item.title}</div>
                             <br />
                             {item.assumption.map(item =>
