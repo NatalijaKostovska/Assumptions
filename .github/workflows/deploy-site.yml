@@ -25,16 +25,12 @@ jobs:
         with:
           creds: ${{ secrets.azure_credentials }}
       
-      - name: Azure account set
-        run: |
-          az account set --subscription 7cd631d3-f833-4b14-b77f-8171b74545a6
-
       - name: Upload to Azure blob storage
         uses: azure/CLI@v1
         with:
           azcliversion: 2.0.72
           inlineScript: |
-            az storage blob upload-batch --account-name iwcassumptions -d '$web' -s ./ 
+            az storage blob upload-batch --account-name iwcassumptions -d '$web' -s ./ --subscription 7cd631d3-f833-4b14-b77f-8171b74545a6
 
       - name: Azure logout
         run: |
