@@ -29,7 +29,7 @@ jobs:
       - name: Upload to Azure blob storage
         uses: azure/CLI@v1
         with:
-          azcliversion: 2.0.72
+          azcliversion: latest
           inlineScript: |
             az account set --subscription 7cd631d3-f833-4b14-b77f-8171b74545a6
             az storage blob upload-batch --account-name iwcassumptions -d '$web' -s ./production-files
