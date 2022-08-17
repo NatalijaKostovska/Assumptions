@@ -32,7 +32,7 @@ jobs:
           azcliversion: latest
           inlineScript: |
             az account set --subscription ${{ secrets.subscription }}
-            az storage blob upload-batch --account-name iwcassumptions -d '$web' -s ./production-files
+            az storage blob upload-batch --account-name iwcassumptions -d '$web' -s ./production-files --overwrite true
 
       - name: Azure logout
         run: |
