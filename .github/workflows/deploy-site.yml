@@ -31,7 +31,8 @@ jobs:
         with:
           azcliversion: 2.0.72
           inlineScript: |
-            az storage blob upload-batch --account-name iwcassumptions -d '$web' -s ./production-files --subscription 7cd631d3-f833-4b14-b77f-8171b74545a6
+            az account set --subscription 7cd631d3-f833-4b14-b77f-8171b74545a6
+            az storage blob upload-batch --account-name iwcassumptions -d '$web' -s ./production-files
 
       - name: Azure logout
         run: |
