@@ -51,7 +51,7 @@ function FileUploadPage() {
         const checkboxArray = [];
 
         Object.keys(selectedFile).map((item) => {
-            checkboxArray.push([]);
+            return checkboxArray.push([]);
         })
         setCheckBox(checkboxArray)
     }, [selectedFile])
