@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, FormGroup, Input, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import SimpleDialog from './SimpleDialog';
 
@@ -113,12 +113,14 @@ function FileUploadPage() {
 
     return (
         <div className='content'>
-            <input type="text" onChange={findWord} />
-            <div className='upload-button'>
-                <Button variant="contained" component="label">
-                    Upload JSON file
-                    <input hidden type="file" name="file" onChange={(e) => changeHandler(e)} />
-                </Button>
+            <div className='bar'>
+                <div className='upload-button'>
+                    <Button variant="contained" component="label">
+                        Upload JSON file
+                        <input hidden type="file" name="file" onChange={(e) => changeHandler(e)} />
+                    </Button>
+                </div>
+                <TextField variant='outlined' type="text" onChange={findWord} sx={{ width: '170px', marginBottom: '15px', borderRadius: '50px' }} label="Search" />
             </div>
             <div className='error-message'>{errorMessage}</div>
             <div className='list'>

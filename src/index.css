@@ -77,3 +77,8 @@ body,
   justify-content: flex-start;
   margin-bottom: 15px;
 }
+
+.bar {
+  display: flex;
+  justify-content: space-between;
+}
