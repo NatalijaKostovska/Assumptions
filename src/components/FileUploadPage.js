@@ -17,7 +17,7 @@ function FileUploadPage() {
     const toggleCheckBox = (objectIndex, arrayIndex) => {
         let tmp = [...checkbox];
         if (tmp[objectIndex]?.includes(arrayIndex)) {
-            tmp[objectIndex] = tmp[objectIndex].filter(index => index != arrayIndex)
+            tmp[objectIndex] = tmp[objectIndex].filter(index => index !== arrayIndex)
         }
         else {
             tmp[objectIndex].push(arrayIndex);
