@@ -19,6 +19,7 @@ jobs:
           workflow: main.yml
           workflow_conclusion: success
           name: production-files
+          path: ./production-files
 
       - name: Azure login
         uses: azure/login@v1
@@ -30,7 +31,7 @@ jobs:
         with:
           azcliversion: 2.0.72
           inlineScript: |
-            az storage blob upload-batch --account-name iwcassumptions -d '$web' -s ./ --subscription 7cd631d3-f833-4b14-b77f-8171b74545a6
+            az storage blob upload-batch --account-name iwcassumptions -d '$web' -s ./production-files --subscription 7cd631d3-f833-4b14-b77f-8171b74545a6
 
       - name: Azure logout
         run: |
