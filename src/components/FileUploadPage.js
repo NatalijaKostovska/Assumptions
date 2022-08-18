@@ -14,7 +14,8 @@ function FileUploadPage() {
     const [itemFound, setItemFound] = useState([]);
     const [checkbox, setCheckBox] = useState([]);
 
-    const toggleCheckBox = (objectIndex, arrayIndex) => {
+    const toggleCheckBox = (objectIndex, arrayIndex, item, topic) => {
+
         let tmp = [...checkbox];
         if (tmp[objectIndex]?.includes(arrayIndex)) {
             tmp[objectIndex] = tmp[objectIndex].filter(index => index !== arrayIndex)
@@ -22,16 +23,18 @@ function FileUploadPage() {
         else {
             tmp[objectIndex].push(arrayIndex);
         }
-        setCheckBox(tmp);
+        setCheckBox(tmp)
     }
 
-    const handleClickOpen = (e, item, mainItemIndex, itemIndex) => {
+
+    const handleClickOpen = (e, item, mainItemIndex, itemIndex, topic) => {
         e.stopPropagation();
         setOpen(true);
         setClickedItem(item)
         setClickedItemIndex(itemIndex)
         setClickedItemMainIndex(mainItemIndex);
-        toggleCheckBox(mainItemIndex, itemIndex);
+        // console.log(checkbox)
+        toggleCheckBox(mainItemIndex, itemIndex, item, topic);
     }
 
     // read JSON file
@@ -39,6 +42,11 @@ function FileUploadPage() {
         reader.onload = (e) => {
             const text = e.target.result;
             setSelectedFile(JSON.parse(text));
+            const checkboxArray = [];
+            Object.keys(JSON.parse(text)).map((item) => {
+                return checkboxArray.push([]);
+            })
+            setCheckBox(checkboxArray)
         }
         if (e.target.files.length === 0) {
             setErrorMessage('No file selected');
@@ -47,21 +55,12 @@ function FileUploadPage() {
         reader?.readAsText(e.target.files[0]);
     };
 
-    useEffect(() => {
-        const checkboxArray = [];
-
-        Object.keys(selectedFile).map((item) => {
-            return checkboxArray.push([]);
-        })
-        setCheckBox(checkboxArray)
-    }, [selectedFile])
-
     // function for modal to close
     const handleClose = () => {
         setOpen(false);
     };
 
-    //  za da ja promenime recenicata vo celiot file
+    //  change the sentence in file
     const handleChangeAssumption = (sentence) => {
         let fileChanges = [...selectedFile];
         fileChanges[clickedItemMainIndex].assumption[clickedItemIndex] = sentence;
@@ -95,15 +94,19 @@ function FileUploadPage() {
         }
     }
 
+
+
     const handleCopyToClipboard = () => {
+        console.log('checkbox', checkbox)
         const novo = selectedFile.reduce(function (previousValue, currentValue, currentIndex) {
+
+            console.log('pv', previousValue, 'cv', currentValue, 'ci', currentIndex)
             if (checkbox[currentIndex].length > 0) {
                 let newCurrentValue = currentValue?.title;
-
-                currentValue.assumption.forEach((assumption, index) =>
-                    checkbox[currentIndex].length !== 0 && checkbox[currentIndex]?.includes(index) && (newCurrentValue = newCurrentValue + '\n' + assumption.replace(/[$]/gi, ""))
-                )
-                return previousValue + '\n' + newCurrentValue
+                currentValue?.assumption?.forEach((assumption, index) =>
+                    checkbox[currentIndex].length !== 0 && checkbox[currentIndex]?.includes(index) && (
+                        newCurrentValue = newCurrentValue + '\n' + assumption))
+                return previousValue + '\n' + newCurrentValue;
             } else {
                 return previousValue;
             }
@@ -135,7 +138,8 @@ function FileUploadPage() {
                                         // checked={setCheck(index)}
                                         key={index}
                                         label={item.replace(/[$]/gi, "")}
-                                        control={<Checkbox onClick={(e) => handleClickOpen(e, item, mainIndex, index)} />}
+                                        control={<Checkbox />}
+                                        onChange={(e) => handleClickOpen(e, item, mainIndex, index, topic)}
                                     // name={index}
                                     />
                                 )}

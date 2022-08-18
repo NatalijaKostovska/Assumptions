@@ -25,7 +25,7 @@ function SimpleDialog({ onClose, selectedValue, open, item, handleChangeAssumpti
                 inputElementsArray.push(element);
             }
         });
-        setInputWords(inputElementsArray)
+        setInputWords(inputElementsArray);
     }
 
     const handleClose = () => {
@@ -46,7 +46,9 @@ function SimpleDialog({ onClose, selectedValue, open, item, handleChangeAssumpti
                 counter += 1;
             }
         });
-        handleChangeAssumption(assumptionStringToArray.join(' '))
+        handleChangeAssumption(assumptionStringToArray.join(' '));
+        setWordsIndex([]);
+        onClose();
     }
 
     const handleChangeInput = (value, index) => {
@@ -59,16 +61,17 @@ function SimpleDialog({ onClose, selectedValue, open, item, handleChangeAssumpti
         <Dialog onClose={handleClose} open={open}>
             <DialogTitle>{item}</DialogTitle>
             {inputWords?.map((element, index) => {
-                return <div>{element} '=' <TextField
-                    onChange={(e) => handleChangeInput(e.target.value, index)}
-                    value={wordsIndex?.[index] || ''}
-                    sx={{ width: "100px" }}
-                    variant='outlined'
-                /><br /></div>
+                return <div>{element} '='
+                    <TextField
+                        onChange={(e) => handleChangeInput(e.target.value, index)}
+                        value={wordsIndex?.[index] || ''}
+                        sx={{ width: "100px" }}
+                        variant='outlined'
+                    /><br /></div>
             })}
             <p>{setence?.replace(/[$]/gi, "")}</p>
-            <Button onClick={handleReplaceWord}>Save</Button>
-        </Dialog>
+            <Button onClick={handleReplaceWord} disabled={wordsIndex?.[0] === ''}>Save</Button>
+        </Dialog >
     );
 }
 export default SimpleDialog;

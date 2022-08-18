@@ -60,16 +60,16 @@ body,
 .header {
   padding: 10px;
   text-align: center;
-  background: #f6f6e5;
-  color: rgba(9, 11, 29, .8);
+  background: #1976d2;
+  color: white;
   font-size: 30px;
   display: flex;
   justify-content: space-between;
 }
 
 .iw-logo {
-  width: 70px;
-  height: 24px;
+  width: 170px;
+  height: 60px;
 }
 
 .upload-button {
