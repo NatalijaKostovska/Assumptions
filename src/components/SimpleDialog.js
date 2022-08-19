@@ -33,10 +33,6 @@ function SimpleDialog({ onClose, selectedValue, open, item, handleChangeAssumpti
         setSentence('')
     };
 
-    // const handleListItemClick = (value) => {
-    //     onClose(value);
-    // };
-
     const handleReplaceWord = () => {
         const assumptionStringToArray = item?.split(' ');
         let counter = 0
@@ -59,18 +55,24 @@ function SimpleDialog({ onClose, selectedValue, open, item, handleChangeAssumpti
 
     return (
         <Dialog onClose={handleClose} open={open}>
-            <DialogTitle>{item}</DialogTitle>
-            {inputWords?.map((element, index) => {
-                return <div>{element} '='
-                    <TextField
-                        onChange={(e) => handleChangeInput(e.target.value, index)}
-                        value={wordsIndex?.[index] || ''}
-                        sx={{ width: "100px" }}
-                        variant='outlined'
-                    /><br /></div>
-            })}
-            <p>{setence?.replace(/[$]/gi, "")}</p>
-            <Button onClick={handleReplaceWord} disabled={wordsIndex?.[0] === ''}>Save</Button>
+
+            <DialogTitle sx={{ borderBottom: '5px solid #1976d2', fontSize: '14px' }}>{item?.replace(/[$]/gi, "")}</DialogTitle>
+            <div className='dialog-content' style={{ minWidth: '340px', width: '340px' }}>
+                {inputWords?.map((element, index) => {
+                    return <div className='dialog-input'>
+                        <span className='dialog-word'>{element?.replace(/[$]/gi, "")} = </span>
+                        <TextField
+                            onChange={(e) => handleChangeInput(e.target.value, index)}
+                            value={wordsIndex?.[index] || ''}
+                            sx={{ width: "100px" }}
+                            variant='outlined'
+                        />
+                        <br />
+                    </div>
+                })}
+                <p>{setence?.replace(/[$]/gi, "")}</p>
+                <Button onClick={handleReplaceWord} disabled={wordsIndex?.[0] === ''} variant={'contained'}>Save</Button>
+            </div>
         </Dialog >
     );
 }

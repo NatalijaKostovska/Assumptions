@@ -13,8 +13,9 @@ function FileUploadPage() {
     const [clickedItemMainIndex, setClickedItemMainIndex] = React.useState();
     const [itemFound, setItemFound] = useState([]);
     const [checkbox, setCheckBox] = useState([]);
+    const [searchValue, setSearchValue] = useState('');
 
-    const toggleCheckBox = (objectIndex, arrayIndex, item, topic) => {
+    const toggleCheckBox = (objectIndex, arrayIndex) => {
 
         let tmp = [...checkbox];
         if (tmp[objectIndex]?.includes(arrayIndex)) {
@@ -26,15 +27,15 @@ function FileUploadPage() {
         setCheckBox(tmp)
     }
 
-
-    const handleClickOpen = (e, item, mainItemIndex, itemIndex, topic) => {
-        e.stopPropagation();
+    const handleClickOpen = (item, mainItemIndex, itemIndex) => {
         setOpen(true);
         setClickedItem(item)
         setClickedItemIndex(itemIndex)
         setClickedItemMainIndex(mainItemIndex);
-        // console.log(checkbox)
-        toggleCheckBox(mainItemIndex, itemIndex, item, topic);
+    }
+
+    const handleClickCheckbox = (e, mainItemIndex, itemIndex) => {
+        toggleCheckBox(mainItemIndex, itemIndex);
     }
 
     // read JSON file
@@ -71,21 +72,22 @@ function FileUploadPage() {
     // search bar function
     const findWord = (e) => {
         // if the input is empty reset the state (search list)
+        setSearchValue(e.target.value);
         if (e.target.value.length === 0) {
             setItemFound([]);
         } else {
             // if word is found in TITLE put the object in array and the array in state
             let foundAssumtions = [];
-            selectedFile.forEach(item => {
+            selectedFile.forEach((item, index) => {
                 // search in title
                 if (item.title?.toLowerCase().includes(e.target.value.toLowerCase())) {
-                    foundAssumtions.push(item)
+                    foundAssumtions.push({ item: item, index: index })
                 }
                 else {
                     // search in assumtions array
                     if (item?.assumption?.filter(assumption => assumption?.includes(e.target.value.toLowerCase())).length > 0) {
                         if (!foundAssumtions.includes(item)) {
-                            foundAssumtions.push(item)
+                            foundAssumtions.push({ item: item, index: index })
                         }
                     }
                 }
@@ -95,23 +97,21 @@ function FileUploadPage() {
     }
 
 
-
     const handleCopyToClipboard = () => {
-        console.log('checkbox', checkbox)
-        const novo = selectedFile.reduce(function (previousValue, currentValue, currentIndex) {
+        const clipboardContent = selectedFile.reduce(function (previousValue, currentValue, currentIndex) {
 
-            console.log('pv', previousValue, 'cv', currentValue, 'ci', currentIndex)
             if (checkbox[currentIndex].length > 0) {
-                let newCurrentValue = currentValue?.title;
+                let newCurrentValue = currentValue?.title + '2\n';
                 currentValue?.assumption?.forEach((assumption, index) =>
+                    // if checkbox is selected and we have index for that item in the array
                     checkbox[currentIndex].length !== 0 && checkbox[currentIndex]?.includes(index) && (
-                        newCurrentValue = newCurrentValue + '\n' + assumption))
-                return previousValue + '\n' + newCurrentValue;
+                        newCurrentValue = newCurrentValue + '\n' + assumption.replace(/[$]/gi, "")))
+                return previousValue + '\n' + newCurrentValue + '\n';
             } else {
                 return previousValue;
             }
         }, '')
-        navigator.clipboard.writeText((novo));
+        navigator.clipboard.writeText((clipboardContent));
     }
 
     return (
@@ -127,32 +127,57 @@ function FileUploadPage() {
             </div>
             <div className='error-message'>{errorMessage}</div>
             <div className='list'>
-                {itemFound.length === 0 ?
+                {itemFound.length === 0 && searchValue === '' ?
                     selectedFile?.map((topic, mainIndex) =>
                         <div key={mainIndex} className="assumption">
                             <div className='topic'>{topic.title}</div>
                             <FormGroup>
                                 {topic.assumption.map((item, index) =>
-                                    <FormControlLabel
-                                        // onChange={() => handleClickOpen(item, mainIndex, index)}
-                                        // checked={setCheck(index)}
-                                        key={index}
-                                        label={item.replace(/[$]/gi, "")}
-                                        control={<Checkbox />}
-                                        onChange={(e) => handleClickOpen(e, item, mainIndex, index, topic)}
-                                    // name={index}
-                                    />
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Checkbox onClick={(e) => handleClickCheckbox(e, mainIndex, index)}
+                                            checked={checkbox?.[mainIndex].includes(index)}
+                                        />
+                                        <div
+                                            key={index}
+                                            onClick={(e) => handleClickOpen(item, mainIndex, index)}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+
+                                            {item.replace(/[$]/gi, "")}
+                                        </div>
+                                    </div>
                                 )}
                             </FormGroup>
                         </div>
                     )
-                    : itemFound.map((item, index) =>
-                        <div className="assumption" key={index}>
-                            <div className='topic'>{item.title}</div>
-                            <br />
-                            {item.assumption.map(item =>
-                                <li>{item.replace(/[$]/gi, "")}</li>)}
-                        </div>)
+                    :
+                    <>
+                        <div className='search-result'>Search result:</div>
+                        {itemFound.map((topic, index) =>
+                            <div className="assumption" key={index}>
+                                <div className='topic'>{topic.item.title}</div>
+                                <br />
+                                <FormGroup>
+                                    {topic.item.assumption.map((item, idx) =>
+                                        // <li>{item.replace(/[$]/gi, "")}</li>)}
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <Checkbox onClick={(e) => handleClickCheckbox(e, topic.index, idx)}
+                                                checked={checkbox?.[topic.index].includes(idx)}
+                                            />
+                                            <div
+                                                key={idx}
+                                                onClick={(e) => handleClickOpen(item, topic.index, idx)}
+                                            >
+
+                                                {item.replace(/[$]/gi, "")}
+                                            </div>
+                                        </div>
+                                    )}
+                                </FormGroup>
+                            </div>
+                        )
+                        }
+                    </>
                 }
             </div>
             <div className='clipboard-button'>
@@ -168,5 +193,3 @@ function FileUploadPage() {
     )
 }
 export default FileUploadPage;
-
-// TODO : on click (uncheck) the pop up should not show

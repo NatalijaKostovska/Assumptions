@@ -36,7 +36,7 @@ body,
   justify-content: center;
   background: #F0F0F0;
   border: 1px solid #D8D8D8;
-  padding: 0 15px;
+  padding: 15px;
 }
 
 .assumption {
@@ -81,4 +81,27 @@ body,
 .bar {
   display: flex;
   justify-content: space-between;
+}
+
+.dialog-content {
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.dialog-input {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.dialog-word {
+  display: flex;
+  align-items: center;
+  width: 100px;
+}
+
+.search-result {
+  color: red;
 }
