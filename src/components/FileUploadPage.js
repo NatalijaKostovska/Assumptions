@@ -1,5 +1,5 @@
-import { Button, Checkbox, FormControlLabel, FormGroup, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Button, Checkbox, FormGroup, TextField } from '@mui/material';
+import React, { useState } from 'react';
 import SimpleDialog from './SimpleDialog';
 
 function FileUploadPage() {
