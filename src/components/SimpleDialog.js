@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Children } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import { Button, TextField } from '@mui/material';
 
 
-function SimpleDialog({ onClose, selectedValue, open, item, handleChangeAssumption }) {
+function SimpleDialog({ onClose, children, open, item, handleChangeAssumption }) {
 
     const [setence, setSentence] = useState(item);
     const [wordsIndex, setWordsIndex] = useState([]);
@@ -55,7 +55,6 @@ function SimpleDialog({ onClose, selectedValue, open, item, handleChangeAssumpti
 
     return (
         <Dialog onClose={handleClose} open={open}>
-
             <DialogTitle sx={{ borderBottom: '5px solid #1976d2', fontSize: '14px' }}>{item?.replace(/[$]/gi, "")}</DialogTitle>
             <div className='dialog-content' style={{ minWidth: '340px', width: '340px' }}>
                 {inputWords?.map((element, index) => {

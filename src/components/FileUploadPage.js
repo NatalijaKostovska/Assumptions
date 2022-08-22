@@ -1,5 +1,7 @@
 import { Button, Checkbox, FormGroup, TextField } from '@mui/material';
 import React, { useState } from 'react';
+import { exampleJson } from '..';
+import DialogContent from './DialogContent';
 import SimpleDialog from './SimpleDialog';
 
 function FileUploadPage() {
@@ -15,6 +17,7 @@ function FileUploadPage() {
     const [checkbox, setCheckBox] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const regex = new RegExp('[$][A-Z]*[a-z]*[$]', 'g');
+    const [openDialog, setOpenDialog] = React.useState(false);
 
     const toggleCheckBox = (objectIndex, arrayIndex) => {
 
@@ -27,6 +30,10 @@ function FileUploadPage() {
         }
         setCheckBox(tmp)
     }
+
+    const handleClickOpenDialog = () => {
+        setOpenDialog(true);
+    };
 
     const handleClickOpen = (item, mainItemIndex, itemIndex) => {
         setOpen(true);
@@ -62,6 +69,11 @@ function FileUploadPage() {
         setOpen(false);
     };
 
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
     //  change the sentence in file
     const handleChangeAssumption = (sentence) => {
         let fileChanges = [...selectedFile];
@@ -69,7 +81,7 @@ function FileUploadPage() {
 
         setSelectedFile(fileChanges);
     }
-    const colorword = '<span color=red>$one$</span>'
+
     // search bar function
     const findWord = (e) => {
         // if the input is empty reset the state (search list)
@@ -117,11 +129,29 @@ function FileUploadPage() {
     return (
         <div className='content'>
             <div className='bar'>
-                <div className='upload-button'>
-                    <Button variant="contained" component="label">
-                        Upload JSON file
-                        <input hidden type="file" name="file" onChange={(e) => changeHandler(e)} />
-                    </Button>
+                <div className='buttons-group'>
+                    <div className='upload-button'>
+                        <Button variant="contained" component="label">
+                            Upload JSON file
+                            <input hidden type="file" name="file" onChange={(e) => changeHandler(e)} />
+                        </Button>
+                    </div>
+                    <div className='example-button'>
+                        <Button variant='outlined' component="label" onClick={handleClickOpenDialog}>
+                            Example JSON
+                        </Button>
+
+                    </div>
+                    <DialogContent
+                        open={openDialog}
+                        onClose={handleCloseDialog}
+                    >
+                        <pre>
+                            <code>
+                                {JSON.stringify(exampleJson, null, 4)}
+                            </code>
+                        </pre>
+                    </DialogContent>
                 </div>
                 <TextField variant='outlined' type="text" onChange={findWord} sx={{ width: '170px', marginBottom: '15px', borderRadius: '50px' }} label="Search" />
             </div>
@@ -147,8 +177,6 @@ function FileUploadPage() {
                                                 })
                                             }}
                                         />
-                                        {console.log(item)}
-
                                     </div>
                                 )}
                             </FormGroup>
@@ -169,10 +197,14 @@ function FileUploadPage() {
                                             />
                                             <div
                                                 key={idx}
-                                                onClick={(e) => handleClickOpen(item, topic.index, idx)}
-                                            >
-                                                {item.replace(/[$]/gi, '<span>')}
-                                            </div>
+                                                onClick={(e) => handleClickOpen(item, idx, index)}
+                                                style={{ cursor: 'pointer' }}
+                                                dangerouslySetInnerHTML={{
+                                                    __html: item.replaceAll(/\$(.*?)\$/g, (textInBetween) => {
+                                                        return `<span style=color:red>${textInBetween.substring(1, textInBetween.length - 1)}</span>`
+                                                    })
+                                                }}
+                                            />
                                         </div>
                                     )}
                                 </FormGroup>
