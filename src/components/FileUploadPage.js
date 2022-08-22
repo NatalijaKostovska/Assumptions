@@ -16,7 +16,6 @@ function FileUploadPage() {
     const [itemFound, setItemFound] = useState([]);
     const [checkbox, setCheckBox] = useState([]);
     const [searchValue, setSearchValue] = useState('');
-    const regex = new RegExp('[$][A-Z]*[a-z]*[$]', 'g');
     const [openDialog, setOpenDialog] = React.useState(false);
 
     const toggleCheckBox = (objectIndex, arrayIndex) => {
