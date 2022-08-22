@@ -14,6 +14,7 @@ function FileUploadPage() {
     const [itemFound, setItemFound] = useState([]);
     const [checkbox, setCheckBox] = useState([]);
     const [searchValue, setSearchValue] = useState('');
+    const regex = new RegExp('[$][A-Z]*[a-z]*[$]', 'g');
 
     const toggleCheckBox = (objectIndex, arrayIndex) => {
 
@@ -68,7 +69,7 @@ function FileUploadPage() {
 
         setSelectedFile(fileChanges);
     }
-
+    const colorword = '<span color=red>$one$</span>'
     // search bar function
     const findWord = (e) => {
         // if the input is empty reset the state (search list)
@@ -95,7 +96,6 @@ function FileUploadPage() {
             setItemFound(foundAssumtions);
         }
     }
-
 
     const handleCopyToClipboard = () => {
         const clipboardContent = selectedFile.reduce(function (previousValue, currentValue, currentIndex) {
@@ -141,10 +141,14 @@ function FileUploadPage() {
                                             key={index}
                                             onClick={(e) => handleClickOpen(item, mainIndex, index)}
                                             style={{ cursor: 'pointer' }}
-                                        >
+                                            dangerouslySetInnerHTML={{
+                                                __html: item.replaceAll(/\$(.*?)\$/g, (textInBetween) => {
+                                                    return `<span style=color:red>${textInBetween.substring(1, textInBetween.length - 1)}</span>`
+                                                })
+                                            }}
+                                        />
+                                        {console.log(item)}
 
-                                            {item.replace(/[$]/gi, "")}
-                                        </div>
                                     </div>
                                 )}
                             </FormGroup>
@@ -159,7 +163,6 @@ function FileUploadPage() {
                                 <br />
                                 <FormGroup>
                                     {topic.item.assumption.map((item, idx) =>
-                                        // <li>{item.replace(/[$]/gi, "")}</li>)}
                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                             <Checkbox onClick={(e) => handleClickCheckbox(e, topic.index, idx)}
                                                 checked={checkbox?.[topic.index].includes(idx)}
@@ -168,15 +171,13 @@ function FileUploadPage() {
                                                 key={idx}
                                                 onClick={(e) => handleClickOpen(item, topic.index, idx)}
                                             >
-
-                                                {item.replace(/[$]/gi, "")}
+                                                {item.replace(/[$]/gi, '<span>')}
                                             </div>
                                         </div>
                                     )}
                                 </FormGroup>
                             </div>
-                        )
-                        }
+                        )}
                     </>
                 }
             </div>
