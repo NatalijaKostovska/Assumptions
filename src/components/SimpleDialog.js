@@ -4,7 +4,7 @@ import Dialog from '@mui/material/Dialog';
 import { Button, TextField } from '@mui/material';
 
 
-function SimpleDialog({ onClose, children, open, item, handleChangeAssumption }) {
+function SimpleDialog({ onClose, children, open, item, handleChangeAssumption, onSave }) {
 
     const [setence, setSentence] = useState(item);
     const [wordsIndex, setWordsIndex] = useState([]);
@@ -18,14 +18,8 @@ function SimpleDialog({ onClose, children, open, item, handleChangeAssumption })
     const [inputWords, setInputWords] = useState([]);
 
     const handleFindWord = () => {
-        const inputElementsArray = []
-        const stringToArray = item?.split(' ');
-        stringToArray?.forEach(element => {
-            if (element.match(regex)) {
-                inputElementsArray.push(element);
-            }
-        });
-        setInputWords(inputElementsArray);
+        const inputs = item?.match(/\$(.*?)\$/g);
+        setInputWords(inputs);
     }
 
     const handleClose = () => {
@@ -37,13 +31,14 @@ function SimpleDialog({ onClose, children, open, item, handleChangeAssumption })
         const assumptionStringToArray = item?.split(' ');
         let counter = 0
         assumptionStringToArray?.forEach((element, index) => {
-            if (element.match(regex)) {
+            if (element.match(/\$(.*?)\$/g)) {
                 assumptionStringToArray[index] = "$" + wordsIndex[counter] + "$";
                 counter += 1;
             }
         });
         handleChangeAssumption(assumptionStringToArray.join(' '));
         setWordsIndex([]);
+        onSave()
         onClose();
     }
 

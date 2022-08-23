@@ -1,8 +1,9 @@
 import { Button, Checkbox, FormGroup, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { exampleJson } from '..';
 import DialogContent from './DialogContent';
 import SimpleDialog from './SimpleDialog';
+import jsonFile from './../testfile.json';
 
 function FileUploadPage() {
 
@@ -19,7 +20,6 @@ function FileUploadPage() {
     const [openDialog, setOpenDialog] = React.useState(false);
 
     const toggleCheckBox = (objectIndex, arrayIndex) => {
-
         let tmp = [...checkbox];
         if (tmp[objectIndex]?.includes(arrayIndex)) {
             tmp[objectIndex] = tmp[objectIndex].filter(index => index !== arrayIndex)
@@ -28,6 +28,10 @@ function FileUploadPage() {
             tmp[objectIndex].push(arrayIndex);
         }
         setCheckBox(tmp)
+    }
+
+    const handleClickCheckbox = () => {
+        toggleCheckBox(clickedItemMainIndex, clickedItemIndex);
     }
 
     const handleClickOpenDialog = () => {
@@ -41,26 +45,19 @@ function FileUploadPage() {
         setClickedItemMainIndex(mainItemIndex);
     }
 
-    const handleClickCheckbox = (e, mainItemIndex, itemIndex) => {
-        toggleCheckBox(mainItemIndex, itemIndex);
-    }
 
     // read JSON file
-    const changeHandler = (e) => {
-        reader.onload = (e) => {
-            const text = e.target.result;
-            setSelectedFile(JSON.parse(text));
-            const checkboxArray = [];
-            Object.keys(JSON.parse(text)).map((item) => {
-                return checkboxArray.push([]);
-            })
-            setCheckBox(checkboxArray)
-        }
-        if (e.target.files.length === 0) {
-            setErrorMessage('No file selected');
-            return;
-        }
-        reader?.readAsText(e.target.files[0]);
+    useEffect(() => {
+        setSelectedFile(jsonFile);
+        const checkboxArray = [];
+        Object.keys(jsonFile).map((item) => {
+            return checkboxArray.push([]);
+        })
+        setCheckBox(checkboxArray);
+    }, [])
+
+    const changeHandler = () => {
+
     };
 
     // function for modal to close
@@ -129,18 +126,6 @@ function FileUploadPage() {
         <div className='content'>
             <div className='bar'>
                 <div className='buttons-group'>
-                    <div className='upload-button'>
-                        <Button variant="contained" component="label">
-                            Upload JSON file
-                            <input hidden type="file" name="file" onChange={(e) => changeHandler(e)} />
-                        </Button>
-                    </div>
-                    <div className='example-button'>
-                        <Button variant='outlined' component="label" onClick={handleClickOpenDialog}>
-                            Example JSON
-                        </Button>
-
-                    </div>
                     <DialogContent
                         open={openDialog}
                         onClose={handleCloseDialog}
@@ -163,12 +148,12 @@ function FileUploadPage() {
                             <FormGroup>
                                 {topic.assumption.map((item, index) =>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Checkbox onClick={(e) => handleClickCheckbox(e, mainIndex, index)}
+                                        <Checkbox onClick={() => handleClickOpen(item, mainIndex, index)}
                                             checked={checkbox?.[mainIndex].includes(index)}
                                         />
                                         <div
                                             key={index}
-                                            onClick={(e) => handleClickOpen(item, mainIndex, index)}
+                                            // onClick={(e) => handleClickOpen(item, mainIndex, index)}
                                             style={{ cursor: 'pointer' }}
                                             dangerouslySetInnerHTML={{
                                                 __html: item.replaceAll(/\$(.*?)\$/g, (textInBetween) => {
@@ -191,12 +176,12 @@ function FileUploadPage() {
                                 <FormGroup>
                                     {topic.item.assumption.map((item, idx) =>
                                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                                            <Checkbox onClick={(e) => handleClickCheckbox(e, topic.index, idx)}
+                                            <Checkbox
+                                                onClick={() => handleClickOpen(item, index, idx)}
                                                 checked={checkbox?.[topic.index].includes(idx)}
                                             />
                                             <div
                                                 key={idx}
-                                                onClick={(e) => handleClickOpen(item, idx, index)}
                                                 style={{ cursor: 'pointer' }}
                                                 dangerouslySetInnerHTML={{
                                                     __html: item.replaceAll(/\$(.*?)\$/g, (textInBetween) => {
@@ -213,13 +198,14 @@ function FileUploadPage() {
                 }
             </div>
             <div className='clipboard-button'>
-                <Button onClick={handleCopyToClipboard}> Copy to Clipboard</Button>
+                <Button onClick={handleCopyToClipboard}>Copy to Clipboard</Button>
             </div>
             <SimpleDialog
                 open={open}
                 onClose={handleClose}
                 item={clickedItem}
                 handleChangeAssumption={handleChangeAssumption}
+                onSave={handleClickCheckbox}
             />
         </div >
     )
