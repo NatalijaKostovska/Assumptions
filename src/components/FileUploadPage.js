@@ -1,7 +1,5 @@
 import { Button, Checkbox, FormGroup, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { exampleJson } from '..';
-import DialogContent from './DialogContent';
 import SimpleDialog from './SimpleDialog';
 import jsonFile from './../testfile.json';
 
@@ -94,14 +92,22 @@ function FileUploadPage() {
         const type = "text/html";
         const clipboardContent = selectedFile.reduce(function (previousValue, currentValue, currentIndex) {
             if (checkbox[currentIndex].length > 0) {
-                let newCurrentValue = '<li><span style="font-family:Calibri, sans-serif">' + currentValue?.title + '</span></li>' + '\n';
+                let newCurrentValue = `<li><span style="font-family:Calibri, sans-serif"> ${currentValue?.title} </span></li>
+                `
                 currentValue?.assumption?.forEach((assumption, index) => {
                     // if checkbox is selected and we have index for that item in the array
                     checkbox[currentIndex].length !== 0 && checkbox[currentIndex]?.includes(index) && (
-                        newCurrentValue = newCurrentValue + '\n' + '<li><ul><span style="font-family:Calibri, sans-serif">' + assumption.replace(/[$]/gi, "") + '</span></ul></li>' + '\n')
-                }
-                )
-                return '\n' + previousValue + '\n' + newCurrentValue + '\n';
+                        newCurrentValue =
+                        `${newCurrentValue}
+                        <li><ul><span style="font-family:Calibri, sans-serif">
+                        ${assumption.replace(/[$]/gi, "")}
+                        </span></ul></li>`
+                    )
+                })
+                return `
+                ${previousValue}
+                ${newCurrentValue}
+                `;
             } else {
                 return previousValue;
             }
@@ -155,7 +161,7 @@ function FileUploadPage() {
                                     {topic.item.assumption.map((item, idx) =>
                                         <div key={idx} style={{ display: 'flex', alignItems: 'center' }}>
                                             <Checkbox
-                                                onClick={() => handleClickOpen(item, index, idx)}
+                                                onClick={item.includes('$') ? () => handleClickOpen(item, index, idx) : () => toggleCheckBox(index, idx)}
                                                 checked={checkbox?.[topic.index].includes(idx)}
                                             />
                                             <div
