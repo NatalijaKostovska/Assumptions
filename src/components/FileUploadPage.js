@@ -8,8 +8,7 @@ import jsonFile from './../testfile.json';
 function FileUploadPage() {
 
     const [selectedFile, setSelectedFile] = useState([]);
-    const [errorMessage, setErrorMessage] = useState();
-    const reader = new FileReader();
+    // const [errorMessage, setErrorMessage] = useState();
     const [open, setOpen] = React.useState(false);
     const [clickedItem, setClickedItem] = React.useState();
     const [clickedItemIndex, setClickedItemIndex] = React.useState();
@@ -17,7 +16,6 @@ function FileUploadPage() {
     const [itemFound, setItemFound] = useState([]);
     const [checkbox, setCheckBox] = useState([]);
     const [searchValue, setSearchValue] = useState('');
-    const [openDialog, setOpenDialog] = React.useState(false);
 
     const toggleCheckBox = (objectIndex, arrayIndex) => {
         let tmp = [...checkbox];
@@ -33,10 +31,6 @@ function FileUploadPage() {
     const handleClickCheckbox = () => {
         toggleCheckBox(clickedItemMainIndex, clickedItemIndex);
     }
-
-    const handleClickOpenDialog = () => {
-        setOpenDialog(true);
-    };
 
     const handleClickOpen = (item, mainItemIndex, itemIndex) => {
         setOpen(true);
@@ -56,18 +50,9 @@ function FileUploadPage() {
         setCheckBox(checkboxArray);
     }, [])
 
-    const changeHandler = () => {
-
-    };
-
     // function for modal to close
     const handleClose = () => {
         setOpen(false);
-    };
-
-
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
     };
 
     //  change the sentence in file
@@ -108,7 +93,6 @@ function FileUploadPage() {
     const handleCopyToClipboard = () => {
         const type = "text/html";
         const clipboardContent = selectedFile.reduce(function (previousValue, currentValue, currentIndex) {
-            const type = "text/json";
             if (checkbox[currentIndex].length > 0) {
                 let newCurrentValue = '<li><span style="font-family:Calibri, sans-serif">' + currentValue?.title + '</span></li>' + '\n';
                 currentValue?.assumption?.forEach((assumption, index) => {
@@ -132,21 +116,8 @@ function FileUploadPage() {
     return (
         <div className='content'>
             <div className='bar'>
-                <div className='buttons-group'>
-                    <DialogContent
-                        open={openDialog}
-                        onClose={handleCloseDialog}
-                    >
-                        <pre>
-                            <code>
-                                {JSON.stringify(exampleJson, null, 4)}
-                            </code>
-                        </pre>
-                    </DialogContent>
-                </div>
                 <TextField variant='outlined' type="text" onChange={findWord} sx={{ width: '170px', marginBottom: '15px', borderRadius: '50px' }} label="Search" />
             </div>
-            <div className='error-message'>{errorMessage}</div>
             <div className='list'>
                 {itemFound.length === 0 && searchValue === '' ?
                     selectedFile?.map((topic, mainIndex) =>
@@ -154,7 +125,7 @@ function FileUploadPage() {
                             <div className='topic'>{topic.title}</div>
                             <FormGroup>
                                 {topic.assumption.map((item, index) =>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
                                         <Checkbox onClick={item.includes('$') ? () => handleClickOpen(item, mainIndex, index) : () => toggleCheckBox(mainIndex, index)}
                                             checked={checkbox?.[mainIndex].includes(index)}
                                         />
@@ -182,7 +153,7 @@ function FileUploadPage() {
                                 <br />
                                 <FormGroup>
                                     {topic.item.assumption.map((item, idx) =>
-                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <div key={idx} style={{ display: 'flex', alignItems: 'center' }}>
                                             <Checkbox
                                                 onClick={() => handleClickOpen(item, index, idx)}
                                                 checked={checkbox?.[topic.index].includes(idx)}
