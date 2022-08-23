@@ -106,20 +106,27 @@ function FileUploadPage() {
     }
 
     const handleCopyToClipboard = () => {
+        const type = "text/html";
         const clipboardContent = selectedFile.reduce(function (previousValue, currentValue, currentIndex) {
-
+            const type = "text/json";
             if (checkbox[currentIndex].length > 0) {
-                let newCurrentValue = currentValue?.title + '2\n';
-                currentValue?.assumption?.forEach((assumption, index) =>
+                let newCurrentValue = '<li><span style="font-family:Calibri, sans-serif">' + currentValue?.title + '</span></li>' + '\n';
+                currentValue?.assumption?.forEach((assumption, index) => {
                     // if checkbox is selected and we have index for that item in the array
                     checkbox[currentIndex].length !== 0 && checkbox[currentIndex]?.includes(index) && (
-                        newCurrentValue = newCurrentValue + '\n' + assumption.replace(/[$]/gi, "")))
-                return previousValue + '\n' + newCurrentValue + '\n';
+                        newCurrentValue = newCurrentValue + '\n' + '<li><ul><span style="font-family:Calibri, sans-serif">' + assumption.replace(/[$]/gi, "") + '</span></ul></li>' + '\n')
+                }
+                )
+                return '\n' + previousValue + '\n' + newCurrentValue + '\n';
             } else {
                 return previousValue;
             }
         }, '')
-        navigator.clipboard.writeText((clipboardContent));
+        const blob = new Blob([clipboardContent], { type });
+        const data = [new window.ClipboardItem({ [type]: blob })];
+
+        navigator.clipboard.write(data).then(
+            navigator.clipboard.writeText((clipboardContent)))
     }
 
     return (
@@ -148,7 +155,7 @@ function FileUploadPage() {
                             <FormGroup>
                                 {topic.assumption.map((item, index) =>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Checkbox onClick={() => handleClickOpen(item, mainIndex, index)}
+                                        <Checkbox onClick={item.includes('$') ? () => handleClickOpen(item, mainIndex, index) : () => toggleCheckBox(mainIndex, index)}
                                             checked={checkbox?.[mainIndex].includes(index)}
                                         />
                                         <div
