@@ -59,7 +59,7 @@ function FileUploadPage() {
         }
         setCheckBox(checkboxArray);
         handleSaveInitialValues();
-    })
+    }, [selectedFile])
 
     // function for modal to close
     const handleClose = () => {
