@@ -46,13 +46,11 @@ function FileUploadPage() {
             return initialWordArray.push([]);
         });
 
-        selectedFile?.map((topic, mainIndex) => {
-            topic?.assumption?.map((item, index) => {
-                if (item?.match(/\$(.*?)\$/g)) {
-                    initialWordArray[mainIndex][index] = item.match(/\$(.*?)\$/g);
-                }
-            })
-        }
+        selectedFile?.map((topic, mainIndex) =>
+            topic?.assumption?.map((item, index) =>
+                item?.match(/\$(.*?)\$/g) &&
+                (initialWordArray[mainIndex][index] = item.match(/\$(.*?)\$/g))
+            )
         )
         setInitialWord(initialWordArray);
     }
@@ -66,7 +64,7 @@ function FileUploadPage() {
         })
         setCheckBox(checkboxArray);
         handleSaveInitialValues();
-    }, [])
+    })
 
     // function for modal to close
     const handleClose = () => {
