@@ -4,7 +4,7 @@ import Dialog from '@mui/material/Dialog';
 import { Button, TextField } from '@mui/material';
 
 
-function SimpleDialog({ onClose, children, open, item, handleChangeAssumption, onSave }) {
+function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption, onSave, clickedItemMainIndex, clickedItemIndex }) {
 
     const [setence, setSentence] = useState(item);
     const [wordsIndex, setWordsIndex] = useState([]);
@@ -54,7 +54,8 @@ function SimpleDialog({ onClose, children, open, item, handleChangeAssumption, o
             <div className='dialog-content' style={{ minWidth: '340px', width: '340px' }}>
                 {inputWords?.map((element, index) => {
                     return <div className='dialog-input'>
-                        <span className='dialog-word'>{element?.replace(/[$]/gi, "")} = </span>
+                        {console.log('first', initialWord[clickedItemMainIndex][clickedItemIndex])}
+                        <span className='dialog-word'>{initialWord[clickedItemMainIndex][clickedItemIndex][index]?.replaceAll('$', '')} = </span>
                         <TextField
                             onChange={(e) => handleChangeInput(e.target.value, index)}
                             value={wordsIndex?.[index] || ''}

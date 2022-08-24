@@ -5,8 +5,7 @@ import jsonFile from './../testfile.json';
 
 function FileUploadPage() {
 
-    const [selectedFile, setSelectedFile] = useState([]);
-    // const [errorMessage, setErrorMessage] = useState();
+    const [selectedFile, setSelectedFile] = useState(jsonFile || []);
     const [open, setOpen] = React.useState(false);
     const [clickedItem, setClickedItem] = React.useState();
     const [clickedItemIndex, setClickedItemIndex] = React.useState();
@@ -14,6 +13,7 @@ function FileUploadPage() {
     const [itemFound, setItemFound] = useState([]);
     const [checkbox, setCheckBox] = useState([]);
     const [searchValue, setSearchValue] = useState('');
+    const [initialWord, setInitialWord] = useState([]);
 
     const toggleCheckBox = (objectIndex, arrayIndex) => {
         let tmp = [...checkbox];
@@ -37,15 +37,35 @@ function FileUploadPage() {
         setClickedItemMainIndex(mainItemIndex);
     }
 
+    //prvo gi zemam site so se so $$ dolari vo state []
+    // za sekoj od nivgi listam i gi pikazvam vo title spored index
+
+    const handleSaveInitialValues = () => {
+        let initialWordArray = [];
+        Object.keys(jsonFile).map((item) => {
+            return initialWordArray.push([]);
+        });
+
+        selectedFile?.map((topic, mainIndex) => {
+            topic?.assumption?.map((item, index) => {
+                if (item?.match(/\$(.*?)\$/g)) {
+                    initialWordArray[mainIndex][index] = item.match(/\$(.*?)\$/g);
+                }
+            })
+        }
+        )
+        setInitialWord(initialWordArray);
+    }
 
     // read JSON file
     useEffect(() => {
-        setSelectedFile(jsonFile);
+        // setSelectedFile(jsonFile);
         const checkboxArray = [];
         Object.keys(jsonFile).map((item) => {
             return checkboxArray.push([]);
         })
         setCheckBox(checkboxArray);
+        handleSaveInitialValues();
     }, [])
 
     // function for modal to close
@@ -61,7 +81,7 @@ function FileUploadPage() {
         setSelectedFile(fileChanges);
     }
 
-    // search bar function
+    // search bar function  
     const findWord = (e) => {
         // if the input is empty reset the state (search list)
         setSearchValue(e.target.value);
@@ -128,12 +148,14 @@ function FileUploadPage() {
                 {itemFound.length === 0 && searchValue === '' ?
                     selectedFile?.map((topic, mainIndex) =>
                         <div key={mainIndex} className="assumption">
-                            <div className='topic'>{topic.title}</div>
+                            <div className='topic'>
+                                {topic.title}
+                            </div>
                             <FormGroup>
                                 {topic.assumption.map((item, index) =>
                                     <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
                                         <Checkbox onClick={item.includes('$') ? () => handleClickOpen(item, mainIndex, index) : () => toggleCheckBox(mainIndex, index)}
-                                            checked={checkbox?.[mainIndex].includes(index)}
+                                            checked={checkbox?.[mainIndex]?.includes(index)}
                                         />
                                         <div
                                             key={index}
@@ -190,6 +212,10 @@ function FileUploadPage() {
                 item={clickedItem}
                 handleChangeAssumption={handleChangeAssumption}
                 onSave={handleClickCheckbox}
+                initialWord={initialWord}
+                clickedItemIndex={clickedItemIndex}
+                clickedItemMainIndex={clickedItemMainIndex}
+
             />
         </div >
     )
