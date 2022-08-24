@@ -37,31 +37,26 @@ function FileUploadPage() {
         setClickedItemMainIndex(mainItemIndex);
     }
 
-    //prvo gi zemam site so se so $$ dolari vo state []
-    // za sekoj od nivgi listam i gi pikazvam vo title spored index
-
-    const handleSaveInitialValues = () => {
-        let initialWordArray = [];
-        Object.keys(jsonFile).map((item) => {
-            return initialWordArray.push([]);
-        });
-
-        selectedFile?.map((topic, mainIndex) =>
-            topic?.assumption?.map((item, index) =>
-                item?.match(/\$(.*?)\$/g) &&
-                (initialWordArray[mainIndex][index] = item.match(/\$(.*?)\$/g))
-            )
-        )
-        setInitialWord(initialWordArray);
-    }
-
     // read JSON file
     useEffect(() => {
-        // setSelectedFile(jsonFile);
         const checkboxArray = [];
         Object.keys(jsonFile).map((item) => {
             return checkboxArray.push([]);
         })
+        const handleSaveInitialValues = () => {
+            let initialWordArray = [];
+            Object.keys(jsonFile).map((item) => {
+                return initialWordArray.push([]);
+            });
+
+            selectedFile?.map((topic, mainIndex) =>
+                topic?.assumption?.map((item, index) =>
+                    item?.match(/\$(.*?)\$/g) &&
+                    (initialWordArray[mainIndex][index] = item.match(/\$(.*?)\$/g))
+                )
+            )
+            setInitialWord(initialWordArray);
+        }
         setCheckBox(checkboxArray);
         handleSaveInitialValues();
     })
