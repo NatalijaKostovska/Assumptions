@@ -23,7 +23,7 @@ function FileUploadPage() {
         else {
             tmp[objectIndex].push(arrayIndex);
         }
-        setCheckBox(tmp)
+        setCheckBox(tmp);
     }
 
     const handleClickCheckbox = () => {
@@ -37,29 +37,30 @@ function FileUploadPage() {
         setClickedItemMainIndex(mainItemIndex);
     }
 
+    const handleSaveInitialValues = () => {
+        let initialWordArray = [];
+        Object.keys(jsonFile).map((item) => {
+            return initialWordArray.push([]);
+        });
+
+        selectedFile?.map((topic, mainIndex) =>
+            topic?.assumption?.map((item, index) =>
+                item?.match(/\$(.*?)\$/g) &&
+                (initialWordArray[mainIndex][index] = item.match(/\$(.*?)\$/g))
+            )
+        )
+        setInitialWord(initialWordArray);
+    }
+
     // read JSON file
     useEffect(() => {
         const checkboxArray = [];
         Object.keys(jsonFile).map((item) => {
             return checkboxArray.push([]);
         })
-        const handleSaveInitialValues = () => {
-            let initialWordArray = [];
-            Object.keys(jsonFile).map((item) => {
-                return initialWordArray.push([]);
-            });
-
-            selectedFile?.map((topic, mainIndex) =>
-                topic?.assumption?.map((item, index) =>
-                    item?.match(/\$(.*?)\$/g) &&
-                    (initialWordArray[mainIndex][index] = item.match(/\$(.*?)\$/g))
-                )
-            )
-            setInitialWord(initialWordArray);
-        }
         setCheckBox(checkboxArray);
         handleSaveInitialValues();
-    }, [selectedFile])
+    }, [])
 
     // function for modal to close
     const handleClose = () => {
@@ -125,6 +126,7 @@ function FileUploadPage() {
                 return previousValue;
             }
         }, '')
+
         const blob = new Blob([clipboardContent], { type });
         const data = [new window.ClipboardItem({ [type]: blob })];
 

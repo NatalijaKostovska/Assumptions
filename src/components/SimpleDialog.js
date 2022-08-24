@@ -54,7 +54,6 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
             <div className='dialog-content' style={{ minWidth: '340px', width: '340px' }}>
                 {inputWords?.map((element, index) => {
                     return <div className='dialog-input'>
-                        {console.log('first', initialWord[clickedItemMainIndex][clickedItemIndex])}
                         <span className='dialog-word'>{initialWord[clickedItemMainIndex][clickedItemIndex][index]?.replaceAll('$', '')} = </span>
                         <TextField
                             onChange={(e) => handleChangeInput(e.target.value, index)}
