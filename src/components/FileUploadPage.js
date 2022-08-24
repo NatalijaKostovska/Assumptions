@@ -59,6 +59,7 @@ function FileUploadPage() {
             return checkboxArray.push([]);
         })
         setCheckBox(checkboxArray);
+        /* eslint-disable */
         handleSaveInitialValues();
     }, [])
 
@@ -149,12 +150,12 @@ function FileUploadPage() {
                             <FormGroup>
                                 {topic.assumption.map((item, index) =>
                                     <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Checkbox onClick={item.includes('$') ? () => handleClickOpen(item, mainIndex, index) : () => toggleCheckBox(mainIndex, index)}
+                                        {console.log(checkbox?.[mainIndex]?.includes(index))}
+                                        <Checkbox onClick={!checkbox?.[mainIndex]?.includes(index) && item.includes('$') ? () => handleClickOpen(item, mainIndex, index) : () => toggleCheckBox(mainIndex, index)}
                                             checked={checkbox?.[mainIndex]?.includes(index)}
                                         />
                                         <div
                                             key={index}
-                                            // onClick={(e) => handleClickOpen(item, mainIndex, index)}
                                             style={{ cursor: 'pointer' }}
                                             dangerouslySetInnerHTML={{
                                                 __html: item.replaceAll(/\$(.*?)\$/g, (textInBetween) => {
