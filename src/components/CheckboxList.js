@@ -1,7 +1,7 @@
 import React from 'react'
 import { Checkbox, FormGroup } from '@mui/material';
 
-function CheckboxList({ itemFound, checkbox, mainIndex, handleClickOpen, toggleCheckBox }) {
+function CheckboxList({ itemFound, checkbox, mainIndex, handleClickOpen }) {
     return (
         <>
             {itemFound.map((topic, index) =>
@@ -12,7 +12,7 @@ function CheckboxList({ itemFound, checkbox, mainIndex, handleClickOpen, toggleC
                         {topic.item.assumption.map((item, idx) =>
                             <div key={idx} style={{ display: 'flex', alignItems: 'center' }}>
                                 <Checkbox
-                                    onClick={!checkbox?.[mainIndex]?.includes(index) && item.includes('$') ? () => handleClickOpen(item, index, idx) : () => toggleCheckBox(index, idx)}
+                                    // onClick={!checkbox?.[mainIndex]?.includes(index) && item.includes('$') ? () => handleClickOpen(item, index, idx) : () => toggleCheckBox(index, idx)}
                                     checked={checkbox?.[topic.index].includes(idx)}
                                 />
                                 <div
