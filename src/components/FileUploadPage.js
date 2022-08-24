@@ -179,7 +179,7 @@ function FileUploadPage() {
                                     {topic.item.assumption.map((item, idx) =>
                                         <div key={idx} style={{ display: 'flex', alignItems: 'center' }}>
                                             <Checkbox
-                                                onClick={item.includes('$') ? () => handleClickOpen(item, index, idx) : () => toggleCheckBox(index, idx)}
+                                                onClick={!checkbox?.[mainIndex]?.includes(index) && item.includes('$') ? () => handleClickOpen(item, index, idx) : () => toggleCheckBox(index, idx)}
                                                 checked={checkbox?.[topic.index].includes(idx)}
                                             />
                                             <div
