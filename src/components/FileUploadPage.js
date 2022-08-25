@@ -150,7 +150,6 @@ function FileUploadPage() {
                             <FormGroup>
                                 {topic.assumption.map((item, index) =>
                                     <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                                        {console.log(checkbox?.[mainIndex]?.includes(index))}
                                         <Checkbox onClick={!checkbox?.[mainIndex]?.includes(index) && item.includes('$') ? () => handleClickOpen(item, mainIndex, index) : () => toggleCheckBox(mainIndex, index)}
                                             checked={checkbox?.[mainIndex]?.includes(index)}
                                         />

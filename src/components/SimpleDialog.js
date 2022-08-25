@@ -8,6 +8,7 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
 
     const [setence, setSentence] = useState(item);
     const [wordsIndex, setWordsIndex] = useState([]);
+    const [error, setError] = useState(true);
     /* eslint-disable */
     const regex = new RegExp('\[$].*[$]\$', 'g');
 
@@ -20,6 +21,7 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
     const handleFindWord = () => {
         const inputs = item?.match(/\$(.*?)\$/g);
         setInputWords(inputs);
+        setWordsIndex(inputs)
     }
 
     const handleClose = () => {
@@ -41,13 +43,21 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
         onSave()
         onClose();
     }
-
     const handleChangeInput = (value, index) => {
         const newReplacedWordsArray = [...wordsIndex];
         newReplacedWordsArray[index] = value;
         setWordsIndex(newReplacedWordsArray);
+        setError(validateInputs(newReplacedWordsArray));
     }
 
+    const validateInputs = (inputWordsArray) => {
+        let isNotValid = false;
+        inputWordsArray.forEach((item) => {
+            if (item === '')
+                isNotValid = true;
+        })
+        return isNotValid;
+    }
     return (
         <Dialog onClose={handleClose} open={open}>
             <DialogTitle sx={{ borderBottom: '5px solid #1976d2', fontSize: '14px' }}>{item?.replace(/[$]/gi, "")}</DialogTitle>
@@ -57,7 +67,7 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
                         <span className='dialog-word'>{initialWord[clickedItemMainIndex][clickedItemIndex][index]?.replaceAll('$', '')} = </span>
                         <TextField
                             onChange={(e) => handleChangeInput(e.target.value, index)}
-                            value={wordsIndex?.[index] || ''}
+                            value={wordsIndex?.[index]?.replaceAll('$', '')}
                             sx={{ width: "100px" }}
                             variant='outlined'
                         />
@@ -65,7 +75,7 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
                     </div>
                 })}
                 <p>{setence?.replace(/[$]/gi, "")}</p>
-                <Button onClick={handleReplaceWord} disabled={wordsIndex?.[0] === ''} variant={'contained'}>Save</Button>
+                <Button onClick={handleReplaceWord} disabled={error} variant={'contained'}>Save</Button>
             </div>
         </Dialog >
     );
