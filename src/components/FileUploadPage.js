@@ -150,8 +150,9 @@ function FileUploadPage() {
                             <FormGroup>
                                 {topic.assumption.map((item, index) =>
                                     <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Checkbox onClick={!checkbox?.[mainIndex]?.includes(index) && item.includes('$') ? () => handleClickOpen(item, mainIndex, index) : () => toggleCheckBox(mainIndex, index)}
-                                            checked={checkbox?.[mainIndex]?.includes(index)}
+                                        <Checkbox
+                                            onClick={!checkbox?.[mainIndex]?.includes(index) && item.includes('$') ? () => handleClickOpen(item, mainIndex, index) : () => toggleCheckBox(mainIndex, index)}
+                                            checked={checkbox?.[mainIndex]?.includes(index) || false}
                                         />
                                         <div
                                             key={index}
@@ -178,8 +179,11 @@ function FileUploadPage() {
                                     {topic.item.assumption.map((item, idx) =>
                                         <div key={idx} style={{ display: 'flex', alignItems: 'center' }}>
                                             <Checkbox
-                                                onClick={!checkbox?.[index]?.includes(index) && item.includes('$') ? () => handleClickOpen(item, index, idx) : () => toggleCheckBox(index, idx)}
-                                                checked={checkbox?.[topic.index].includes(idx)}
+                                                onClick={!checkbox?.[index]?.includes(index)
+                                                    && item.includes('$') ?
+                                                    () => handleClickOpen(item, index, idx) :
+                                                    () => toggleCheckBox(index, idx)}
+                                                checked={checkbox?.[topic.index].includes(idx) || false}
                                             />
                                             <div
                                                 key={idx}
@@ -212,7 +216,7 @@ function FileUploadPage() {
                 clickedItemMainIndex={clickedItemMainIndex}
 
             />
-        </div >
+        </div>
     )
 }
 export default FileUploadPage;

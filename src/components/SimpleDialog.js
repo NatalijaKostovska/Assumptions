@@ -63,11 +63,11 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
             <DialogTitle sx={{ borderBottom: '5px solid #1976d2', fontSize: '14px' }}>{item?.replace(/[$]/gi, "")}</DialogTitle>
             <div className='dialog-content' style={{ minWidth: '340px', width: '340px' }}>
                 {inputWords?.map((element, index) => {
-                    return <div className='dialog-input'>
+                    return <div key={index} className='dialog-input'>
                         <span className='dialog-word'>{initialWord[clickedItemMainIndex][clickedItemIndex][index]?.replaceAll('$', '')} = </span>
                         <TextField
                             onChange={(e) => handleChangeInput(e.target.value, index)}
-                            value={wordsIndex?.[index]?.replaceAll('$', '')}
+                            value={wordsIndex?.[index]?.replaceAll('$', '') || ''}
                             sx={{ width: "100px" }}
                             variant='outlined'
                         />
