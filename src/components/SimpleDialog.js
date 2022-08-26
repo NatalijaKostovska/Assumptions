@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import { Button, TextField } from '@mui/material';
+import { Button, FormControl, IconButton, Input, InputLabel, TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption, onSave, clickedItemMainIndex, clickedItemIndex }) {
 
-    const [setence, setSentence] = useState(item);
     const [wordsIndex, setWordsIndex] = useState([]);
     const [error, setError] = useState(true);
     /* eslint-disable */
@@ -26,7 +26,6 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
 
     const handleClose = () => {
         onClose();
-        setSentence('')
     };
 
     const handleReplaceWord = () => {
@@ -60,22 +59,74 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
     }
     return (
         <Dialog onClose={handleClose} open={open}>
-            <DialogTitle sx={{ borderBottom: '5px solid #1976d2', fontSize: '14px' }}>{item?.replace(/[$]/gi, "")}</DialogTitle>
-            <div className='dialog-content' style={{ minWidth: '340px', width: '340px' }}>
-                {inputWords?.map((element, index) => {
-                    return <div key={index} className='dialog-input'>
-                        <span className='dialog-word'>{initialWord[clickedItemMainIndex][clickedItemIndex][index]?.replaceAll('$', '')} = </span>
-                        <TextField
-                            onChange={(e) => handleChangeInput(e.target.value, index)}
-                            value={wordsIndex?.[index]?.replaceAll('$', '') || ''}
-                            sx={{ width: "100px" }}
-                            variant='outlined'
-                        />
-                        <br />
-                    </div>
-                })}
-                <p>{setence?.replace(/[$]/gi, "")}</p>
-                <Button onClick={handleReplaceWord} disabled={error} variant={'contained'}>Save</Button>
+            <div className='dialog-header'>
+                <DialogTitle sx={{
+                    fontWeight: '500',
+                    fontSize: '24px'
+                }}>
+                    <div>Change content</div>
+                    {onClose ? (
+                        <IconButton
+                            aria-label="close"
+                            onClick={onClose}
+                            sx={{
+                                position: 'absolute',
+                                right: 8,
+                                top: 8,
+                                color: (theme) => theme.palette.grey[500],
+                                marginTop: '5px',
+                                marginRight: '5px'
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    ) : null}
+                </DialogTitle>
+            </div>
+            <div className='dialog-content'>
+                <div className='dialog-form'>
+                    <span className='sentence'
+                        style={{ cursor: 'pointer' }}
+                        dangerouslySetInnerHTML={{
+                            __html: item.replaceAll(/\$(.*?)\$/g, (textInBetween) => {
+                                return `<span style=color:red>${textInBetween.substring(1, textInBetween.length - 1)}</span>`
+                            })
+                        }}
+                    />
+                    {inputWords?.map((element, index) => {
+                        return <div key={index} className='dialog-input'>
+                            <FormControl variant="standard" sx={{ width: '30%' }}>
+                                <InputLabel htmlFor="component-simple">CURRENT TEXT</InputLabel>
+                                <Input
+                                    value={initialWord[clickedItemMainIndex][clickedItemIndex][index]?.replaceAll('$', '')}
+                                    sx={{ width: "100px" }}
+                                    variant='outlined'
+                                    disabled
+                                />
+                            </FormControl>
+
+                            <FormControl variant="standard" sx={{ width: '30%' }}>
+                                <InputLabel htmlFor="component-simple">REPLACEMENT TEXT</InputLabel>
+                                <Input
+                                    onChange={(e) => handleChangeInput(e.target.value, index)}
+                                    value={wordsIndex?.[index]?.replaceAll('$', '') || ''}
+                                    sx={{ width: "100px" }}
+                                    variant='outlined'
+                                />
+                            </FormControl>
+                            <br />
+                        </div>
+                    })}
+                </div>
+                <div className='save-button'>
+                    <Button
+                        onClick={handleReplaceWord}
+                        disabled={error}
+                        color="error"
+                        variant='contained'>
+                        Apply changes
+                    </Button>
+                </div>
             </div>
         </Dialog >
     );

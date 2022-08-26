@@ -1,7 +1,8 @@
 import { Button, Checkbox, FormGroup, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import SimpleDialog from './SimpleDialog';
 import jsonFile from './../testfile.json';
+import SearchRounded from '@mui/icons-material/Search';
 
 function FileUploadPage() {
 
@@ -138,7 +139,18 @@ function FileUploadPage() {
     return (
         <div className='content'>
             <div className='bar'>
-                <TextField variant='outlined' type="text" onChange={findWord} sx={{ width: '170px', marginBottom: '15px', borderRadius: '50px' }} label="Search" />
+                <TextField
+                    variant='outlined'
+                    type="text"
+                    onChange={findWord}
+                    label={
+                        <div style={{ display: 'flex' }}>
+                            <SearchRounded />
+                            Search...
+                        </div>
+                    }
+                    sx={{ background: 'white', borderRadius: '50px' }}
+                />
             </div>
             <div className='list'>
                 {itemFound.length === 0 && searchValue === '' ?
@@ -153,6 +165,7 @@ function FileUploadPage() {
                                         <Checkbox
                                             onClick={!checkbox?.[mainIndex]?.includes(index) && item.includes('$') ? () => handleClickOpen(item, mainIndex, index) : () => toggleCheckBox(mainIndex, index)}
                                             checked={checkbox?.[mainIndex]?.includes(index) || false}
+                                            color='error'
                                         />
                                         <div
                                             key={index}
@@ -203,7 +216,11 @@ function FileUploadPage() {
                 }
             </div>
             <div className='clipboard-button'>
-                <Button onClick={handleCopyToClipboard}>Copy to Clipboard</Button>
+                <Button
+                    onClick={handleCopyToClipboard}
+                    color="error"
+                    variant='contained'
+                >Copy to Clipboard</Button>
             </div>
             <SimpleDialog
                 open={open}
