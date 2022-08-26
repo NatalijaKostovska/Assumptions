@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import { Button, FormControl, IconButton, Input, InputLabel } from '@mui/material';
-// import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption, onSave, clickedItemMainIndex, clickedItemIndex }) {
@@ -65,7 +65,7 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
                     fontSize: '24px'
                 }}>
                     <div>Change content</div>
-                    {/* {onClose ? (
+                    {onClose ? (
                         <IconButton
                             aria-label="close"
                             onClick={onClose}
@@ -80,7 +80,7 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
                         >
                             <CloseIcon />
                         </IconButton>
-                    ) : null} */}
+                    ) : null}
                 </DialogTitle>
             </div>
             <div className='dialog-content'>

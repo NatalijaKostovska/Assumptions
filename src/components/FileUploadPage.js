@@ -2,7 +2,7 @@ import { Button, Checkbox, FormGroup, TextField } from '@mui/material';
 import React, { Fragment, useEffect, useState } from 'react';
 import SimpleDialog from './SimpleDialog';
 import jsonFile from './../testfile.json';
-// import SearchRounded from '@mui/icons-material/Search';
+import SearchRounded from '@mui/icons-material/Search';
 
 function FileUploadPage() {
 
@@ -145,7 +145,7 @@ function FileUploadPage() {
                     onChange={findWord}
                     label={
                         <div style={{ display: 'flex' }}>
-                            {/* <SearchRounded /> */}
+                            <SearchRounded />
                             Search...
                         </div>
                     }
