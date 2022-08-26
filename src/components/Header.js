@@ -1,5 +1,5 @@
 import React from 'react';
-import iwconnectLogo from './assets/images/iwconnect-logo.png'
+import iwconnectLogo from './assets/images/iwa.svg'
 
 function Header() {
 

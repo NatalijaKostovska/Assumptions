@@ -17,16 +17,15 @@ code {
 html,
 body,
 #root {
-  height: 100%;
   margin: 0;
+  background-color: #f6f6f6;
 }
 
 .content {
-  padding: 15px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-content: center;
-  background-color: #F6F6F6;
 }
 
 .list {
