@@ -5,7 +5,6 @@ function Header() {
 
     return (
         <div className="header">
-            Assumptions
             <img src={iwconnectLogo} alt="iw-logo" className="iw-logo" />
         </div>
     )
