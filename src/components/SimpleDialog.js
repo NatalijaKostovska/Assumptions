@@ -42,18 +42,27 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
         onSave()
         onClose();
     }
-    const handleChangeInput = (value, index) => {
+    const handleChangeInput = (value, index, element) => {
         const newReplacedWordsArray = [...wordsIndex];
         newReplacedWordsArray[index] = value;
         setWordsIndex(newReplacedWordsArray);
-        setError(validateInputs(newReplacedWordsArray));
+        setError(validateInputs(newReplacedWordsArray, element));
     }
 
-    const validateInputs = (inputWordsArray) => {
+    const validateInputs = (inputWordsArray, element) => {
         let isNotValid = false;
         inputWordsArray.forEach((item) => {
-            if (item === '')
+            if (item === '') {
                 isNotValid = true;
+            }
+            element.map((i => {
+                if (item.replaceAll('$', '') === i.replaceAll('$', '')) {
+                    isNotValid = true;
+                }
+                else {
+                    isNotValid = false;
+                }
+            }))
         })
         return isNotValid;
     }
@@ -104,11 +113,10 @@ function SimpleDialog({ onClose, initialWord, open, item, handleChangeAssumption
                                     disabled
                                 />
                             </FormControl>
-
                             <FormControl variant="standard" sx={{ width: '30%' }}>
                                 <InputLabel htmlFor="component-simple">REPLACEMENT TEXT</InputLabel>
                                 <Input
-                                    onChange={(e) => handleChangeInput(e.target.value, index)}
+                                    onChange={(e) => handleChangeInput(e.target.value, index, inputWords)}
                                     value={wordsIndex?.[index]?.replaceAll('$', '') || ''}
                                     sx={{ width: "100px" }}
                                     variant='outlined'
